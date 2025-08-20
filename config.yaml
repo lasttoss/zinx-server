@@ -1,0 +1,7 @@
+redis:
+  url: "redis://:@localhost:6379/1"
+database:
+  url: "mongodb://root:123456@mongodb:27017"
+  name: "zinx"
+jwt:
+  secret: "abcd"
