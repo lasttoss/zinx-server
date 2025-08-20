@@ -1,0 +1,255 @@
+# github.com/aceld/zinx v1.2.7
+## explicit; go 1.23.0
+github.com/aceld/zinx/logo
+github.com/aceld/zinx/zconf
+github.com/aceld/zinx/zdecoder
+github.com/aceld/zinx/ziface
+github.com/aceld/zinx/zinterceptor
+github.com/aceld/zinx/zlog
+github.com/aceld/zinx/znet
+github.com/aceld/zinx/zpack
+github.com/aceld/zinx/zutils
+# github.com/cespare/xxhash/v2 v2.3.0
+## explicit; go 1.11
+github.com/cespare/xxhash/v2
+# github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f
+## explicit
+github.com/dgryski/go-rendezvous
+# github.com/fsnotify/fsnotify v1.8.0
+## explicit; go 1.17
+github.com/fsnotify/fsnotify
+github.com/fsnotify/fsnotify/internal
+# github.com/gabriel-vasile/mimetype v1.4.8
+## explicit; go 1.20
+github.com/gabriel-vasile/mimetype
+github.com/gabriel-vasile/mimetype/internal/charset
+github.com/gabriel-vasile/mimetype/internal/json
+github.com/gabriel-vasile/mimetype/internal/magic
+# github.com/go-playground/locales v0.14.1
+## explicit; go 1.17
+github.com/go-playground/locales
+github.com/go-playground/locales/currency
+# github.com/go-playground/universal-translator v0.18.1
+## explicit; go 1.18
+github.com/go-playground/universal-translator
+# github.com/go-playground/validator/v10 v10.27.0
+## explicit; go 1.20
+github.com/go-playground/validator/v10
+# github.com/go-redis/redis/v8 v8.11.5
+## explicit; go 1.17
+github.com/go-redis/redis/v8
+github.com/go-redis/redis/v8/internal
+github.com/go-redis/redis/v8/internal/hashtag
+github.com/go-redis/redis/v8/internal/hscan
+github.com/go-redis/redis/v8/internal/pool
+github.com/go-redis/redis/v8/internal/proto
+github.com/go-redis/redis/v8/internal/rand
+github.com/go-redis/redis/v8/internal/util
+# github.com/go-viper/mapstructure/v2 v2.4.0
+## explicit; go 1.18
+github.com/go-viper/mapstructure/v2
+github.com/go-viper/mapstructure/v2/internal/errors
+# github.com/golang-jwt/jwt/v5 v5.3.0
+## explicit; go 1.21
+github.com/golang-jwt/jwt/v5
+# github.com/golang/snappy v1.0.0
+## explicit
+github.com/golang/snappy
+# github.com/google/uuid v1.6.0
+## explicit
+github.com/google/uuid
+# github.com/gorilla/websocket v1.5.0
+## explicit; go 1.12
+github.com/gorilla/websocket
+# github.com/joho/godotenv v1.5.1
+## explicit; go 1.12
+github.com/joho/godotenv
+# github.com/klauspost/compress v1.16.7
+## explicit; go 1.18
+github.com/klauspost/compress
+github.com/klauspost/compress/fse
+github.com/klauspost/compress/huff0
+github.com/klauspost/compress/internal/cpuinfo
+github.com/klauspost/compress/internal/snapref
+github.com/klauspost/compress/zstd
+github.com/klauspost/compress/zstd/internal/xxhash
+# github.com/klauspost/cpuid/v2 v2.1.1
+## explicit; go 1.15
+github.com/klauspost/cpuid/v2
+# github.com/klauspost/reedsolomon v1.11.8
+## explicit; go 1.17
+github.com/klauspost/reedsolomon
+# github.com/leodido/go-urn v1.4.0
+## explicit; go 1.18
+github.com/leodido/go-urn
+github.com/leodido/go-urn/scim/schema
+# github.com/pelletier/go-toml/v2 v2.2.3
+## explicit; go 1.21.0
+github.com/pelletier/go-toml/v2
+github.com/pelletier/go-toml/v2/internal/characters
+github.com/pelletier/go-toml/v2/internal/danger
+github.com/pelletier/go-toml/v2/internal/tracker
+github.com/pelletier/go-toml/v2/unstable
+# github.com/pkg/errors v0.9.1
+## explicit
+github.com/pkg/errors
+# github.com/sagikazarmark/locafero v0.7.0
+## explicit; go 1.21
+github.com/sagikazarmark/locafero
+# github.com/sourcegraph/conc v0.3.0
+## explicit; go 1.19
+github.com/sourcegraph/conc
+github.com/sourcegraph/conc/internal/multierror
+github.com/sourcegraph/conc/iter
+github.com/sourcegraph/conc/panics
+# github.com/spf13/afero v1.12.0
+## explicit; go 1.21
+github.com/spf13/afero
+github.com/spf13/afero/internal/common
+github.com/spf13/afero/mem
+# github.com/spf13/cast v1.7.1
+## explicit; go 1.19
+github.com/spf13/cast
+# github.com/spf13/pflag v1.0.6
+## explicit; go 1.12
+github.com/spf13/pflag
+# github.com/spf13/viper v1.20.1
+## explicit; go 1.21.0
+github.com/spf13/viper
+github.com/spf13/viper/internal/encoding/dotenv
+github.com/spf13/viper/internal/encoding/json
+github.com/spf13/viper/internal/encoding/toml
+github.com/spf13/viper/internal/encoding/yaml
+github.com/spf13/viper/internal/features
+# github.com/subosito/gotenv v1.6.0
+## explicit; go 1.18
+github.com/subosito/gotenv
+# github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161
+## explicit
+github.com/templexxx/cpufeat
+# github.com/templexxx/xor v0.0.0-20191217153810-f85b25db303b
+## explicit
+github.com/templexxx/xor
+# github.com/tjfoc/gmsm v1.4.1
+## explicit; go 1.14
+github.com/tjfoc/gmsm/sm4
+# github.com/xdg-go/pbkdf2 v1.0.0
+## explicit; go 1.9
+github.com/xdg-go/pbkdf2
+# github.com/xdg-go/scram v1.1.2
+## explicit; go 1.11
+github.com/xdg-go/scram
+# github.com/xdg-go/stringprep v1.0.4
+## explicit; go 1.11
+github.com/xdg-go/stringprep
+# github.com/xtaci/kcp-go v5.4.20+incompatible
+## explicit
+github.com/xtaci/kcp-go
+# github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78
+## explicit; go 1.17
+github.com/youmark/pkcs8
+# go.mongodb.org/mongo-driver/v2 v2.3.0
+## explicit; go 1.19
+go.mongodb.org/mongo-driver/v2/bson
+go.mongodb.org/mongo-driver/v2/event
+go.mongodb.org/mongo-driver/v2/internal/aws
+go.mongodb.org/mongo-driver/v2/internal/aws/awserr
+go.mongodb.org/mongo-driver/v2/internal/aws/credentials
+go.mongodb.org/mongo-driver/v2/internal/aws/signer/v4
+go.mongodb.org/mongo-driver/v2/internal/bsoncoreutil
+go.mongodb.org/mongo-driver/v2/internal/bsonutil
+go.mongodb.org/mongo-driver/v2/internal/codecutil
+go.mongodb.org/mongo-driver/v2/internal/credproviders
+go.mongodb.org/mongo-driver/v2/internal/csfle
+go.mongodb.org/mongo-driver/v2/internal/csot
+go.mongodb.org/mongo-driver/v2/internal/decimal128
+go.mongodb.org/mongo-driver/v2/internal/driverutil
+go.mongodb.org/mongo-driver/v2/internal/handshake
+go.mongodb.org/mongo-driver/v2/internal/httputil
+go.mongodb.org/mongo-driver/v2/internal/logger
+go.mongodb.org/mongo-driver/v2/internal/mongoutil
+go.mongodb.org/mongo-driver/v2/internal/optionsutil
+go.mongodb.org/mongo-driver/v2/internal/ptrutil
+go.mongodb.org/mongo-driver/v2/internal/rand
+go.mongodb.org/mongo-driver/v2/internal/randutil
+go.mongodb.org/mongo-driver/v2/internal/serverselector
+go.mongodb.org/mongo-driver/v2/internal/uuid
+go.mongodb.org/mongo-driver/v2/mongo
+go.mongodb.org/mongo-driver/v2/mongo/address
+go.mongodb.org/mongo-driver/v2/mongo/options
+go.mongodb.org/mongo-driver/v2/mongo/readconcern
+go.mongodb.org/mongo-driver/v2/mongo/readpref
+go.mongodb.org/mongo-driver/v2/mongo/writeconcern
+go.mongodb.org/mongo-driver/v2/tag
+go.mongodb.org/mongo-driver/v2/version
+go.mongodb.org/mongo-driver/v2/x/bsonx/bsoncore
+go.mongodb.org/mongo-driver/v2/x/mongo/driver
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/auth
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/auth/creds
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/auth/internal/gssapi
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/connstring
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/description
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/dns
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/mnet
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/mongocrypt
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/mongocrypt/options
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/ocsp
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/operation
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/session
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/topology
+go.mongodb.org/mongo-driver/v2/x/mongo/driver/wiremessage
+# go.uber.org/atomic v1.9.0
+## explicit; go 1.13
+go.uber.org/atomic
+# go.uber.org/multierr v1.9.0
+## explicit; go 1.19
+go.uber.org/multierr
+# golang.org/x/crypto v0.36.0
+## explicit; go 1.23.0
+golang.org/x/crypto/blowfish
+golang.org/x/crypto/cast5
+golang.org/x/crypto/internal/alias
+golang.org/x/crypto/ocsp
+golang.org/x/crypto/pbkdf2
+golang.org/x/crypto/salsa20
+golang.org/x/crypto/salsa20/salsa
+golang.org/x/crypto/scrypt
+golang.org/x/crypto/sha3
+golang.org/x/crypto/tea
+golang.org/x/crypto/twofish
+golang.org/x/crypto/xtea
+# golang.org/x/net v0.38.0
+## explicit; go 1.23.0
+golang.org/x/net/bpf
+golang.org/x/net/html
+golang.org/x/net/html/atom
+golang.org/x/net/internal/iana
+golang.org/x/net/internal/socket
+golang.org/x/net/ipv4
+golang.org/x/net/ipv6
+# golang.org/x/sync v0.12.0
+## explicit; go 1.23.0
+golang.org/x/sync/errgroup
+golang.org/x/sync/singleflight
+# golang.org/x/sys v0.31.0
+## explicit; go 1.23.0
+golang.org/x/sys/cpu
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# golang.org/x/text v0.23.0
+## explicit; go 1.23.0
+golang.org/x/text/encoding
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/unicode
+golang.org/x/text/internal/language
+golang.org/x/text/internal/language/compact
+golang.org/x/text/internal/tag
+golang.org/x/text/internal/utf8internal
+golang.org/x/text/language
+golang.org/x/text/runes
+golang.org/x/text/transform
+golang.org/x/text/unicode/norm
+# gopkg.in/yaml.v3 v3.0.1
+## explicit
+gopkg.in/yaml.v3
