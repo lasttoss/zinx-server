@@ -4,6 +4,7 @@ import (
 	"github.com/aceld/zinx/ziface"
 	"github.com/aceld/zinx/zlog"
 	"github.com/aceld/zinx/znet"
+	"github.com/robfig/cron/v3"
 	"zinx-server/internal/configs"
 	"zinx-server/internal/constants"
 	"zinx-server/internal/filters"
@@ -16,6 +17,8 @@ func Route() {
 	zlog.Debug("route start")
 	baseRouter := znet.BaseRouter{}
 
+	s := znet.NewServer()
+
 	redisService := services.NewRedisService(configs.RedisClient)
 
 	userRepository := repositories.NewUserRepository(configs.MongoDB.UserCollection)
@@ -23,8 +26,6 @@ func Route() {
 		configs.ServerConfig.Apple.GoogleClientId, configs.ServerConfig.Apple.ClientId)
 
 	userService := services.NewUserService(userRepository)
-
-	s := znet.NewServer()
 
 	s.SetOnConnStart(OnConnectionAdd)
 	s.SetOnConnStop(OnConnectionLost)
@@ -70,6 +71,13 @@ func Route() {
 	s.AddInterceptor(&filters.MyInterceptor{RedisService: redisService})
 
 	redisService.ClearAllSessions()
+
+	job := cron.New(cron.WithSeconds())
+	_, _ = job.AddFunc("*/5 * * * * *", func() {
+		zlog.Info("CCU: ", len(s.GetConnMgr().GetAllConnID()))
+	})
+
+	job.Start()
 
 	s.Serve()
 	zlog.Debug("route serve")
