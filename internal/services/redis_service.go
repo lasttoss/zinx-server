@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"fmt"
-	"github.com/aceld/zinx/zlog"
 	"github.com/go-redis/redis/v8"
 	"zinx-server/internal/constants"
 )
@@ -19,7 +18,6 @@ type redisService struct {
 }
 
 func (r redisService) ClearAllSessions() {
-	zlog.Debug("[REDIS] clear all sessions")
 	ctx := context.Background()
 	pattern := fmt.Sprintf("%s*", constants.SessionCached)
 	keys, err := r.redisClient.Keys(ctx, pattern).Result()
@@ -27,7 +25,6 @@ func (r redisService) ClearAllSessions() {
 		return
 	}
 	for _, key := range keys {
-		zlog.Info("Clear session from: ", key)
 		r.redisClient.Del(ctx, key)
 	}
 }

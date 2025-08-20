@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/aceld/zinx/ziface"
-	"github.com/aceld/zinx/zlog"
 	"github.com/aceld/zinx/znet"
 	"github.com/go-playground/validator/v10"
 	"zinx-server/internal/constants"
@@ -39,7 +38,7 @@ func (p *AuthDeviceRouter) Handle(request ziface.IRequest) {
 		}
 		return
 	}
-	zlog.Debug("Req ", req.Id)
+
 	userId, response, serviceErr := p.AuthByDevice(req)
 	if serviceErr != nil {
 		err := conn.SendMsg(constants.RpcError, serviceErr)
@@ -211,7 +210,6 @@ func (p *AuthTokenRouter) Handle(request ziface.IRequest) {
 		}
 		return
 	}
-	zlog.Debug("Req ", req.Id)
 	userId, response, serviceErr := p.AuthByToken(req)
 	if serviceErr != nil {
 		err := conn.SendMsg(constants.RpcError, serviceErr)
