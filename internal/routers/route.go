@@ -50,6 +50,7 @@ func Route() {
 			BaseRouter:   baseRouter,
 			AuthService:  authService,
 			RedisService: redisService},
+		constants.RpcJoinChatRoom: &handlers.ChatRouter{},
 	}
 
 	// authorized msgId >= 1100
