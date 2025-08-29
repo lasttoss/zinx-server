@@ -3,5 +3,7 @@
   "Host": "127.0.0.1",
   "TcpPort": 8999,
   "MaxConn": 12000,
-  "MaxPackageSize": 4096
+  "MaxPackageSize": 4096,
+  "Mode": "",
+  "WsPath": "/ws"
 }

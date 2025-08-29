@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e427695-43c3-4760-b4fe-9f4f8d596273" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handlers/auth_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handlers/auth_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/zinx.json" beforeDir="false" afterPath="$PROJECT_DIR$/conf/zinx.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/constants/rpc_constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/constants/rpc_constants.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/routers/route.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/routers/route.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/services/redis_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/redis_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/modules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/modules.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

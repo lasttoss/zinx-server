@@ -9,6 +9,7 @@ const (
 	RpcAuthByGoogle   = 1003
 	RpcAuthByFacebook = 1004
 	RpcAuthByApple    = 1005
+	RpcJoinChatRoom   = 1006
 
 	// Account
 	RpcGetUserAccount = 1100
