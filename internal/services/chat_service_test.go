@@ -138,14 +138,17 @@ func TestBroadcastDropsAClientThatCannotBeWrittenTo(t *testing.T) {
 		t.Fatalf("clients = %d, want 2", roomSize(room))
 	}
 
-	// an abrupt close, the way a lost connection really ends: no close frame, just a dead socket
+	// Close the socket under the room's side of the dead client. A lost phone looks like this: the
+	// connection is gone and every write to it fails. Closing it here rather than from the client
+	// end keeps the test deterministic - writing to a socket this process already closed returns an
+	// error straight away, instead of depending on how fast the network stack reports a reset.
 	if err := dead.UnderlyingConn().Close(); err != nil {
 		t.Fatalf("close the dead client: %v", err)
 	}
 
-	for i := 0; i < 5 && roomSize(room) > 1; i++ {
+	for i := 0; i < 10 && roomSize(room) > 1; i++ {
 		room.BroadcastMessage([]byte("tick"))
-		time.Sleep(50 * time.Millisecond)
+		time.Sleep(20 * time.Millisecond)
 	}
 	if got := roomSize(room); got != 1 {
 		t.Fatalf("clients = %d after broadcasting to a dead socket, want 1", got)
