@@ -106,7 +106,10 @@ func (a authService) AuthByGoogle(request mappers.AuthRequest) (string, []byte, 
 	if !ok {
 		return "", nil, utils.NewApiError(utils.JwtClaimsError)
 	}
-	if !(aud != a.googleClientId || aud != a.appleGoogleClientId) {
+	// De Morgan, spelled out: a token is rejected unless its audience is one of ours. The
+	// negated form this replaces rejected only when aud matched both ids, which is to say never,
+	// so any Google-issued token for any application was accepted as a login here.
+	if aud != a.googleClientId && aud != a.appleGoogleClientId {
 		return "", nil, utils.NewApiError(utils.JwtClaimsError)
 	}
 
