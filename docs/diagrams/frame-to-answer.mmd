@@ -1,0 +1,16 @@
+%% Source for docs/diagrams/frame-to-answer.html
+%% A frame of bytes becomes an answered request, and the gate it passes on the way.
+flowchart LR
+  C["game client<br/>Unity / Cocos"] -->|"TCP :8999"| F["8-byte TLV frame<br/>msgId u32 BE<br/>length u32 BE<br/>payload"]
+  F --> RT["router<br/>dispatch by msgId"]
+  RT --> SG{"session gate<br/>per message, not per phase"}
+  SG -->|"auth messages<br/>1000-1006"| H["handler"]
+  SG -->|"1100 needs a session"| H
+  SG -.->|"no session"| ERR["9999 RpcError<br/>+ close"]
+  H --> S["services"] --> REPO["repositories"]
+  REPO --> R[("Redis<br/>live connId per account")]
+  REPO --> DB[("account documents")]
+  classDef gate fill:#eef5ef,stroke:#1a6b3c,stroke-width:2px;
+  classDef bad stroke:#b3261e;
+  class SG gate;
+  class ERR bad;

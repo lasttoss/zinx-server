@@ -191,3 +191,40 @@ Coverage is low on purpose and honestly: most of this server is repositories tal
 Redis, and configuration read through viper, which need those services to mean anything. What can
 be tested without them is tested, and the whole server is additionally exercised end to end by
 `scripts/smoke.py` in CI, against the real MongoDB and Redis in `docker-compose.yml`.
+
+## The frame as a picture
+
+```mermaid
+%% Source for docs/diagrams/frame-to-answer.html
+%% A frame of bytes becomes an answered request, and the gate it passes on the way.
+flowchart LR
+  C["game client<br/>Unity / Cocos"] -->|"TCP :8999"| F["8-byte TLV frame<br/>msgId u32 BE<br/>length u32 BE<br/>payload"]
+  F --> RT["router<br/>dispatch by msgId"]
+  RT --> SG{"session gate<br/>per message, not per phase"}
+  SG -->|"auth messages<br/>1000-1006"| H["handler"]
+  SG -->|"1100 needs a session"| H
+  SG -.->|"no session"| ERR["9999 RpcError<br/>+ close"]
+  H --> S["services"] --> REPO["repositories"]
+  REPO --> R[("Redis<br/>live connId per account")]
+  REPO --> DB[("account documents")]
+  classDef gate fill:#eef5ef,stroke:#1a6b3c,stroke-width:2px;
+  classDef bad stroke:#b3261e;
+  class SG gate;
+  class ERR bad;
+```
+
+The architecture section above shows the boxes. This is the same path at the level of one frame: eight bytes
+of header — `msgId` and `length`, both big endian — and a payload a reader can skip without parsing, because
+the length is in the header and not inferred from a delimiter.
+
+The point the picture is drawn to make is where the session is checked: **per message, not once per
+connection**. The protocol table's `auth` column is a property of each message, and an auth message is by
+definition one that arrives without a session, so a gate at connection time would have to special-case them
+anyway.
+
+The other rule is drawn underneath: one live session per account. The connection id of the live session is
+kept in Redis, so a second login is a takeover — the older connection is told, rather than left guessing why
+its messages stopped working.
+
+`docs/diagrams/frame-to-answer.mmd` is the Mermaid source; `make diagram` exports a PNG if a browser is
+present.

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>A frame of bytes, an answered request, and the gate between them</title>
+<style>
+  :root { --ink:#151412; --paper:#f7f4ee; --rule:#cfc7b8; --red:#b3261e; --green:#1a6b3c; --amber:#8a5a00; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink);
+         font:16px/1.5 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  .sheet { max-width:1080px; margin:0 auto; padding:56px 40px 72px; }
+  .kicker { font:600 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing:.14em;
+            text-transform:uppercase; color:var(--amber); }
+  h1 { font-size:38px; line-height:1.15; margin:.35em 0 .2em; letter-spacing:-.01em; }
+  .dek { font-size:19px; color:#463f36; max-width:76ch; margin:0 0 8px; }
+  .meta { font:12px/1.6 ui-monospace, Menlo, monospace; color:#6b6357; border-top:1px solid var(--rule);
+          padding-top:10px; margin-top:22px; }
+  svg { display:block; width:100%; height:auto; margin:34px 0 0; }
+  .pairs { display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; margin-top:34px; }
+  .card { border-left:4px solid var(--ink); padding:14px 0 14px 18px; background:#fffdf8; }
+  .card b { display:block; font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:6px; }
+  .card p { margin:0; font-size:16px; } .card p + p { margin-top:7px; }
+  footer { margin-top:38px; font:12px/1.7 ui-monospace, Menlo, monospace; color:#6b6357;
+           border-top:1px solid var(--rule); padding-top:12px; }
+  text { font-family:"Iowan Old Style", Palatino, Georgia, serif; }
+  .mono { font-family:ui-monospace, Menlo, monospace; }
+</style>
+<div class="sheet">
+  <div class="kicker">Protocol · zinx-server</div>
+  <h1>A frame of bytes, an answered request, and the gate between them</h1>
+  <p class="dek">Raw TCP, an eight-byte header, and a router that dispatches on the message id inside it.
+    The part worth drawing is where the session is checked: not once at the start of a connection, but on
+    every message that needs one.</p>
+  <div class="meta">TCP :8999 · frame = msgId(uint32 BE) | length(uint32 BE) | payload · msgIds 1000–1100 ·
+    one live session per account, kept in Redis</div>
+
+  <svg viewBox="0 0 1040 560" role="img" aria-label="An eight-byte frame is decoded and dispatched by message id through a per-message session gate into handlers, services and repositories, with Redis holding one live connection id per account">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#151412"/></marker>
+      <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#1a6b3c"/></marker>
+      <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#b3261e"/></marker>
+    </defs>
+
+    <!-- frame layout -->
+    <text x="20" y="30" font-size="12" letter-spacing="1.5" fill="#6b6357" class="mono">THE FRAME, ON THE WIRE</text>
+    <rect x="20" y="42" width="150" height="60" rx="4" fill="#eef5ef" stroke="#1a6b3c" stroke-width="2"/>
+    <text x="34" y="66" font-size="13" font-weight="600" fill="#1a6b3c">msgId</text>
+    <text x="34" y="88" font-size="11" class="mono">uint32 big endian</text>
+    <rect x="176" y="42" width="150" height="60" rx="4" fill="#eef5ef" stroke="#1a6b3c" stroke-width="2"/>
+    <text x="190" y="66" font-size="13" font-weight="600" fill="#1a6b3c">length</text>
+    <text x="190" y="88" font-size="11" class="mono">uint32 big endian</text>
+    <rect x="332" y="42" width="330" height="60" rx="4" fill="#fffdf8" stroke="#151412" stroke-dasharray="5 4"/>
+    <text x="346" y="66" font-size="13" font-weight="600">payload</text>
+    <text x="346" y="88" font-size="11" class="mono">length bytes · JSON for the messages above</text>
+    <text x="676" y="66" font-size="12" fill="#6b6357">Eight bytes of header, and then the body -</text>
+    <text x="676" y="84" font-size="12" fill="#6b6357">so a reader can route without parsing it.</text>
+    <text x="676" y="102" font-size="12" fill="#6b6357">No delimiter to scan for, no length to guess.</text>
+
+    <!-- pipeline -->
+    <text x="20" y="134" font-size="12" letter-spacing="1.5" fill="#6b6357" class="mono">WHAT HAPPENS TO IT</text>
+    <rect x="20" y="148" width="155" height="86" rx="4" fill="#fffdf8" stroke="#151412"/>
+    <text x="34" y="172" font-size="13" font-weight="600">TCP :8999</text>
+    <text x="34" y="194" font-size="11" class="mono">one connection</text>
+    <text x="34" y="212" font-size="11" class="mono">per client,</text>
+    <text x="34" y="226" font-size="11" class="mono">no HTTP</text>
+
+    <rect x="189" y="148" width="155" height="86" rx="4" fill="#fffdf8" stroke="#151412"/>
+    <text x="203" y="172" font-size="13" font-weight="600">frame decode</text>
+    <text x="203" y="194" font-size="11" class="mono">read 8 bytes</text>
+    <text x="203" y="212" font-size="11" class="mono">then exactly</text>
+    <text x="203" y="226" font-size="11" class="mono">length bytes</text>
+
+    <rect x="358" y="148" width="155" height="86" rx="4" fill="#fffdf8" stroke="#151412"/>
+    <text x="372" y="172" font-size="13" font-weight="600">router</text>
+    <text x="372" y="194" font-size="11" class="mono">dispatch by</text>
+    <text x="372" y="212" font-size="11" class="mono">msgId, one</text>
+    <text x="372" y="226" font-size="11" class="mono">handler each</text>
+
+    <rect x="527" y="148" width="155" height="86" rx="4" fill="#eef5ef" stroke="#1a6b3c" stroke-width="2"/>
+    <text x="541" y="172" font-size="13" font-weight="600" fill="#1a6b3c">session gate</text>
+    <text x="541" y="194" font-size="11" class="mono">per message,</text>
+    <text x="541" y="212" font-size="11" class="mono">not once per</text>
+    <text x="541" y="226" font-size="11" class="mono">connection</text>
+
+    <rect x="696" y="148" width="155" height="86" rx="4" fill="#fffdf8" stroke="#151412"/>
+    <text x="710" y="172" font-size="13" font-weight="600">handler</text>
+    <text x="710" y="194" font-size="11" class="mono">thin, then the</text>
+    <text x="710" y="212" font-size="11" class="mono">service decides,</text>
+    <text x="710" y="226" font-size="11" class="mono">then repository</text>
+
+    <rect x="865" y="148" width="155" height="86" rx="4" fill="#fffdf8" stroke="#8a5a00" stroke-width="2"/>
+    <text x="879" y="172" font-size="13" font-weight="600" fill="#8a5a00">Redis</text>
+    <text x="879" y="194" font-size="11" class="mono">live connId</text>
+    <text x="879" y="212" font-size="11" class="mono">per account:</text>
+    <text x="879" y="226" font-size="11" class="mono">one session</text>
+
+    <path d="M175 191 L189 191" stroke="#151412" stroke-width="2" marker-end="url(#a)"/>
+    <path d="M344 191 L358 191" stroke="#151412" stroke-width="2" marker-end="url(#a)"/>
+    <path d="M513 191 L527 191" stroke="#151412" stroke-width="2" marker-end="url(#a)"/>
+    <path d="M682 191 L696 191" stroke="#151412" stroke-width="2" marker-end="url(#a)"/>
+    <path d="M851 191 L865 191" stroke="#151412" stroke-width="2" marker-end="url(#a)"/>
+
+    <path d="M604 234 L604 268 L940 268" stroke="#1a6b3c" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+    <path d="M530 234 L530 268 L120 268 L120 246" stroke="#b3261e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+    <text x="132" y="264" font-size="11" class="mono" fill="#b3261e">no session → 9999 RpcError, then close</text>
+    <text x="618" y="264" font-size="11" class="mono" fill="#1a6b3c">after the handler, the id is refreshed</text>
+
+    <!-- message table as a picture -->
+    <rect x="20" y="290" width="1000" height="126" rx="4" fill="#fffdf8" stroke="#cfc7b8"/>
+    <text x="36" y="314" font-size="12" class="mono" fill="#6b6357">WHICH MESSAGES NEED A SESSION — IT IS A PROPERTY OF THE MESSAGE, NOT A PHASE</text>
+    <rect x="36" y="326" width="470" height="76" rx="3" fill="#f6f4ef" stroke="#6b6357"/>
+    <text x="50" y="348" font-size="12" class="mono">no session: 1000 ping · 1001 token</text>
+    <text x="50" y="368" font-size="12" class="mono">1002 device · 1003 Google · 1005 Apple</text>
+    <text x="50" y="388" font-size="12" class="mono">1006 join chat room</text>
+    <rect x="522" y="326" width="482" height="76" rx="3" fill="#eef5ef" stroke="#1a6b3c"/>
+    <text x="536" y="348" font-size="12" class="mono" fill="#1a6b3c">needs a session: 1100 get account</text>
+    <text x="536" y="368" font-size="12" class="mono">9999 error is the one shape a client</text>
+    <text x="536" y="388" font-size="12" class="mono">parses for every failure</text>
+
+    <!-- the rule -->
+    <rect x="20" y="434" width="1000" height="106" rx="4" fill="#fdeeed" stroke="#b3261e"/>
+    <text x="36" y="458" font-size="13" class="mono" fill="#b3261e">ONE LIVE SESSION PER ACCOUNT</text>
+    <text x="36" y="482" font-size="13">The connection id of the live session is kept in Redis. A second login for the same account is not</text>
+    <text x="36" y="502" font-size="13">a second session: it takes the first one over, and the older connection is told rather than left</text>
+    <text x="36" y="522" font-size="13">guessing why its messages stopped working. That is a product decision as much as a technical one.</text>
+  </svg>
+
+  <div class="pairs">
+    <div class="card">
+      <b>Why the header carries the length</b>
+      <p>Without it a reader has to scan for a delimiter it cannot know, and a truncated body cannot be told
+        from a slow one. Eight bytes of framing is what makes "read exactly this many bytes" possible.</p>
+    </div>
+    <div class="card">
+      <b>Why the gate is per message</b>
+      <p>An auth message by definition arrives without a session, so a gate at connection time would have to
+        special-case them anyway. Naming the property per message is the same rule with fewer branches.</p>
+    </div>
+    <div class="card">
+      <b>Why one session, in Redis</b>
+      <p>Redis holds the live connection id because it has to be shared by every instance that might receive
+        the next frame, and because a session that survives a process is the difference between a takeover
+        and a locked account.</p>
+    </div>
+  </div>
+
+  <footer>
+    Sources: docs/diagrams/frame-to-answer.mmd for the Mermaid version; the README's protocol table for the
+    message ids and the auth column; the frame layout it documents. The server is built on the open-source
+    zinx framework, used under its own licence and credited in the README. `make diagram` exports a PNG.
+  </footer>
+</div>
