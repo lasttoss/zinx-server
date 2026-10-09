@@ -21,6 +21,7 @@ func NewUserResponse(item models.UserModel) UserResponse {
 		UserId:      item.UserId,
 		DeviceId:    item.DeviceId,
 		GoogleId:    item.GoogleId,
+		FacebookId:  item.FacebookId,
 		AppleId:     item.AppleId,
 		DisplayName: item.DisplayName,
 		AvatarUrl:   item.AvatarUrl,
