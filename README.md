@@ -243,3 +243,19 @@ to check, and claiming one would be inventing a fact.
 ```bash
 make chart     # helm lint --strict + helm template
 ```
+
+## Coverage
+
+Measured with `go test -cover ./...`:
+
+| package | statements |
+|---|---|
+| `internal/utils` | 60.0% |
+| `internal/services` | 10.7% |
+| `internal/models` | 0.0% |
+| `internal/repositories` | 0.0% |
+| `internal/routers` | 0.0% |
+
+The low numbers are the honest part of this table: the wire helpers and one service are tested, and the session
+routing and the storage access - the parts a packet actually travels through - are covered by the smoke run
+against a live server rather than by unit tests. Naming that is more useful than a badge that averages it away.
