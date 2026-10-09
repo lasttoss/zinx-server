@@ -46,6 +46,7 @@ func (p *AuthDeviceRouter) Handle(request ziface.IRequest) {
 			utils.NewSystemError(request.GetMsgID())
 			return
 		}
+		return
 	}
 
 	if response == nil {
@@ -54,6 +55,7 @@ func (p *AuthDeviceRouter) Handle(request ziface.IRequest) {
 			utils.NewSystemError(request.GetMsgID())
 			return
 		}
+		return
 	}
 
 	err := conn.SendMsg(request.GetMsgID(), response)
@@ -101,6 +103,7 @@ func (p *AuthGoogleRouter) Handle(request ziface.IRequest) {
 			utils.NewSystemError(request.GetMsgID())
 			return
 		}
+		return
 	}
 
 	if response == nil {
@@ -108,6 +111,7 @@ func (p *AuthGoogleRouter) Handle(request ziface.IRequest) {
 		if err != nil {
 			return
 		}
+		return
 	}
 
 	err := conn.SendMsg(request.GetMsgID(), response)
@@ -164,6 +168,7 @@ func (p *AuthAppleRouter) Handle(request ziface.IRequest) {
 			utils.NewSystemError(request.GetMsgID())
 			return
 		}
+		return
 	}
 
 	if response == nil {
@@ -171,6 +176,7 @@ func (p *AuthAppleRouter) Handle(request ziface.IRequest) {
 		if err != nil {
 			return
 		}
+		return
 	}
 
 	err := conn.SendMsg(request.GetMsgID(), response)
@@ -217,6 +223,7 @@ func (p *AuthTokenRouter) Handle(request ziface.IRequest) {
 			utils.NewSystemError(request.GetMsgID())
 			return
 		}
+		return
 	}
 
 	if response == nil {
@@ -225,6 +232,7 @@ func (p *AuthTokenRouter) Handle(request ziface.IRequest) {
 			utils.NewSystemError(request.GetMsgID())
 			return
 		}
+		return
 	}
 
 	err := conn.SendMsg(request.GetMsgID(), response)
