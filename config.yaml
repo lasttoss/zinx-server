@@ -1,7 +1,13 @@
+# The configuration a developer runs with, and nothing more.
+#
+# `make run` reads this file (see README) and expects MongoDB and Redis on this machine. Every value
+# below can be replaced from the environment with the MYAPP_ prefix - docker-compose.yml does
+# exactly that, and a deployment has to as well - so the credentials here are placeholders and the
+# signing secret is the one from .env.example, which is published and therefore not a secret.
 redis:
-  url: "redis://:@localhost:6379/1"
+  url: "redis://localhost:6379/1"
 database:
-  url: "mongodb://root:123456@mongodb:27017"
+  url: "mongodb://root:devpassword@localhost:27017"
   name: "zinx"
 jwt:
-  secret: "abcd"
+  secret: "dev-secret-change-me"
