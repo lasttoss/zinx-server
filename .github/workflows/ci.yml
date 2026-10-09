@@ -23,22 +23,21 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: build
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
           cache: true
-      - name: Start the stack
-        run: docker compose up -d --build
-      - name: Wait for the server
-        run: |
-          for i in $(seq 1 60); do
-            if (echo > /dev/tcp/127.0.0.1/8999) 2>/dev/null; then exit 0; fi
-            sleep 2
-          done
-          docker compose logs
-          exit 1
+      - name: Start the stack and wait for the healthchecks
+        # --wait blocks until mongo, redis and the server all report healthy. Waiting only for the
+        # TCP port to open is not enough: the server accepts connections before it can reach the
+        # database it authenticates against.
+        run: docker compose up -d --build --wait --wait-timeout 180
+      - name: What is running
+        if: always()
+        run: docker compose ps
       - name: Smoke test
         run: python3 scripts/smoke.py 127.0.0.1 $${SERVER_PORT:-8999}
       - name: Server logs
