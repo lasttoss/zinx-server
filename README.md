@@ -167,3 +167,27 @@ up four real problems, all fixed:
 ## License
 
 MIT - see [LICENSE](LICENSE). Third-party dependencies keep their own licenses (`go.mod`).
+
+## Tests
+
+```bash
+go test -race ./...
+```
+
+12 tests, and they are where the two real bugs in this repository came from:
+
+- `internal/utils` (60%): JWT signing and verification, expiry, a token signed with the wrong key,
+  and the error helper that turns failures into the codes the client sees.
+- `internal/services` (10.7%): the chat room driven over real websocket connections - a client
+  joining, leaving, leaving twice, a broadcast reaching every client in the room, a broadcast to an
+  empty room, and a client whose socket died being dropped instead of being written to forever.
+- `internal/handlers` (5.6%): the chat router's room map. The router is registered as an empty
+  literal, so the first player to open the chat used to panic the process with *assignment to entry
+  in nil map*; and because each connection is handled on its own goroutine, two players joining at
+  once were a *concurrent map write*, which Go turns into an unrecoverable crash. Both are fixed
+  (lazily created, mutex guarded map) and the -race test fails on the old code.
+
+Coverage is low on purpose and honestly: most of this server is repositories talking to MongoDB and
+Redis, and configuration read through viper, which need those services to mean anything. What can
+be tested without them is tested, and the whole server is additionally exercised end to end by
+`scripts/smoke.py` in CI, against the real MongoDB and Redis in `docker-compose.yml`.
