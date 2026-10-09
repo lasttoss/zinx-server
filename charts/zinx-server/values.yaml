@@ -28,3 +28,8 @@ config:
   mongoUri: mongodb://mongo:27017/zinx
   redisHost: redis
   redisPort: 6379
+secret:
+  # The credentials belong in a Secret that already exists; the chart never holds one.
+  existingSecret: ""
+  # Set true only to render or lint outside a cluster; a real install must name a Secret.
+  allowMissing: false

@@ -2,7 +2,7 @@ SHELL := /bin/bash
 GO ?= go
 COMPOSE ?= docker compose
 
-.PHONY: help up down logs restart infra build run test race vet fmt lint coverage smoke clean diagram chart
+.PHONY: help up down logs restart infra build run test race vet fmt lint coverage smoke clean diagram chart guard
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -57,6 +57,13 @@ diagram:
 
 # The chart is part of the repository, so it gets the same gate as the code.
 chart:
-	helm lint charts/zinx-server --strict
-	helm template dev charts/zinx-server > /dev/null
+	helm lint charts/zinx-server --strict --set secret.allowMissing=true
+	helm template dev charts/zinx-server --set secret.allowMissing=true > /dev/null
 	@echo "the chart lints and renders"
+
+# The guard is a feature, so it gets a test.
+guard:
+	@if helm template dev charts/zinx-server > /dev/null 2>&1; then \
+		echo "the chart rendered with no credentials: the guard is broken"; exit 1; \
+	fi
+	@echo "the chart refuses to render without credentials"

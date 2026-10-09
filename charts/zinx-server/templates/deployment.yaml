@@ -1,3 +1,6 @@
+{{- if and (not .Values.secret.existingSecret) (not .Values.secret.allowMissing) }}
+{{- fail (printf "secret.existingSecret is required: %s would otherwise start with no credentials and crash loop. Name the Secret that holds them, or set secret.allowMissing=true to render outside a cluster." .Chart.Name) }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,6 +40,13 @@ spec:
           ports:
             - name: tcp
               containerPort: {{ .Values.service.targetPort }}
+          {{- if .Values.secret.existingSecret }}
+          # The named Secret supplies the configuration. The inline values below are for a
+          # local install only: env wins over envFrom, so the two must never be set together.
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secret.existingSecret }}
+          {{- else }}
           env:
             - name: MONGO_URI
               value: {{ .Values.config.mongoUri | quote }}
@@ -45,6 +55,7 @@ spec:
             - name: REDIS_PORT
               value: {{ .Values.config.redisPort | quote }}
           # The protocol is raw TCP, so a TCP probe is the honest check: it is the same thing a client does.
+          {{- end }}
           readinessProbe:
             tcpSocket:
               port: tcp
