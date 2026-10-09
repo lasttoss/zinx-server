@@ -246,16 +246,32 @@ make chart     # helm lint --strict + helm template
 
 ## Coverage
 
-Measured with `go test -cover ./...`:
-
 | package | statements |
 |---|---|
+| `internal/mappers` | 100.0% |
+| `internal/models` | 100.0% |
+| `internal/filters` | 95.7% |
+| `internal/repositories` | 87.9% |
+| `internal/services` | 74.8% |
+| `internal/configs` | 74.6% |
 | `internal/utils` | 60.0% |
-| `internal/services` | 10.7% |
-| `internal/models` | 0.0% |
-| `internal/repositories` | 0.0% |
-| `internal/routers` | 0.0% |
+| `internal/handlers` | 52.9% |
+| `internal/routers`, `cmd/*` | 0.0% |
+| total | **61.4%** |
 
-The low numbers are the honest part of this table: the wire helpers and one service are tested, and the session
-routing and the storage access - the parts a packet actually travels through - are covered by the smoke run
-against a live server rather than by unit tests. Naming that is more useful than a badge that averages it away.
+The repository tests are integration tests - what they check is the queries and the bson tags behind
+them, where a mistake does not fail but matches nothing - so they need a real MongoDB and skip
+themselves without `TEST_MONGO_URI`. CI sets it from a mongo service container, and locally:
+
+```bash
+docker compose up -d mongodb
+TEST_MONGO_URI='mongodb://root:devpassword@localhost:27017/?authSource=admin' make coverage
+```
+
+They own the database they are pointed at: they drop the users collection.
+
+What the numbers do not say, and should: `internal/routers` and `cmd` are wiring, and the smoke test
+in `make up` is what covers them. The failure paths in `internal/configs` end in `log.Fatalf`, so a
+bad configuration exits the process rather than returning an error - that is a property of the
+package, not a gap in the tests, and it is why a broken `config.yaml` shows up as a container that
+will not start.

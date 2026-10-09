@@ -11,6 +11,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # The repository tests need a real MongoDB; without it they skip and the coverage printed below
+    # would be missing the queries. The tests drop the users collection, so nothing here is worth
+    # keeping.
+    env:
+      TEST_MONGO_URI: mongodb://localhost:27017
+    services:
+      mongodb:
+        image: mongo:7
+        ports: ['27017:27017']
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1}).ok'"
+          --health-interval 5s --health-timeout 5s --health-retries 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
