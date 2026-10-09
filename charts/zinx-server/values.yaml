@@ -1,0 +1,30 @@
+replicaCount: 2
+image:
+  repository: ghcr.io/lasttoss/zinx-server
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  # A game client dials this; switch to LoadBalancer or NodePort where clients come from outside the cluster.
+  type: ClusterIP
+  port: 8999
+  targetPort: 8999
+resources:
+  requests: {cpu: 100m, memory: 128Mi}
+  limits: {cpu: 500m, memory: 256Mi}
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+networkPolicy:
+  enabled: true
+  datastorePorts:
+    - 27017
+    - 6379
+config:
+  mongoUri: mongodb://mongo:27017/zinx
+  redisHost: redis
+  redisPort: 6379

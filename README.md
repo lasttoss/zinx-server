@@ -228,3 +228,18 @@ its messages stopped working.
 
 `docs/diagrams/frame-to-answer.mmd` is the Mermaid source; `make diagram` exports a PNG if a browser is
 present.
+
+## The chart
+
+`charts/zinx-server/` deploys the server with what a long-lived TCP connection needs: a rolling update that
+never takes a replica out of the Service before its successor can accept (`maxUnavailable: 0`), a 60-second
+grace period so a session is closed rather than cut, a PodDisruptionBudget, an HPA, no service-account token,
+a read-only root filesystem, and a NetworkPolicy that allows the game port in and only DNS plus MongoDB and
+Redis out.
+
+The probe is a TCP connect on the game port, which is exactly what a client does — there is no HTTP path here
+to check, and claiming one would be inventing a fact.
+
+```bash
+make chart     # helm lint --strict + helm template
+```

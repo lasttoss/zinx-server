@@ -1,0 +1,9 @@
+{{ .Chart.Name }} {{ .Chart.Version }} is installed as {{ .Release.Name }}.
+
+  kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }}
+  helm test {{ .Release.Name }}
+
+Clients dial the TCP port; the Service is a ClusterIP by default, so set service.type where they come from.
+The server reaches MongoDB and Redis by name ({{ .Values.config.redisHost }}) and the policy allows those ports
+and DNS - nothing else. A rolling update keeps a replica in the Service at all times, and the grace period is
+long enough for a session to be closed rather than cut.

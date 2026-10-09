@@ -1,0 +1,6 @@
+apiVersion: v2
+name: zinx-server
+description: A TCP game server on Kubernetes - a long-lived connection needs a deploy that does not drop it, and a policy that only lets it reach its own stores
+type: application
+version: 0.1.0
+appVersion: "1.0"
