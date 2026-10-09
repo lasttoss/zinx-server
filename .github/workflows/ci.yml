@@ -121,6 +121,10 @@ jobs:
           version: v3.16.3
       - name: Lint the chart strictly
         run: make chart
+      - name: The chart must refuse to render without credentials
+        # A guard nobody tests is a guard that quietly stops working - the same rule the chart's own
+        # message points at, and the one that failed silently before this step existed.
+        run: make guard
       - name: The rendered manifest must keep its claims
         run: |
           helm template dev charts/zinx-server > /tmp/render.yaml
