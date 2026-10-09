@@ -251,13 +251,13 @@ make chart     # helm lint --strict + helm template
 | `internal/mappers` | 100.0% |
 | `internal/models` | 100.0% |
 | `internal/filters` | 95.7% |
-| `internal/repositories` | 87.9% |
+| `internal/repositories` | 86.5% |
 | `internal/services` | 74.8% |
-| `internal/configs` | 74.6% |
+| `internal/configs` | 21.7% |
 | `internal/utils` | 60.0% |
 | `internal/handlers` | 52.9% |
 | `internal/routers`, `cmd/*` | 0.0% |
-| total | **61.4%** |
+| total | **57.1%** |
 
 The repository tests are integration tests - what they check is the queries and the bson tags behind
 them, where a mistake does not fail but matches nothing - so they need a real MongoDB and skip
@@ -271,7 +271,8 @@ TEST_MONGO_URI='mongodb://root:devpassword@localhost:27017/?authSource=admin' ma
 They own the database they are pointed at: they drop the users collection.
 
 What the numbers do not say, and should: `internal/routers` and `cmd` are wiring, and the smoke test
-in `make up` is what covers them. The failure paths in `internal/configs` end in `log.Fatalf`, so a
+in `make up` is what covers them. `internal/configs` is mostly untested on purpose: only `InitConfig` is
+covered, because the connect functions report failure with `log.Fatalf`, so a
 bad configuration exits the process rather than returning an error - that is a property of the
 package, not a gap in the tests, and it is why a broken `config.yaml` shows up as a container that
 will not start.
