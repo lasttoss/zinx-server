@@ -1,38 +1,59 @@
-version: '3.8'
-
 services:
-  redis:
-    image: redis:latest
-    container_name: redis
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
   mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    restart: always
-    ports:
-      - "27017:27017"
+    image: mongo:7
+    container_name: zinx-mongodb
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 123456
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-devpassword}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
     volumes:
       - mongodb_data:/data/db
-    command: mongod --quiet --logpath /dev/null
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    command: mongod --quiet
 
-  zin-server-api:
-    build: .
-    container_name: zinx-server-api
-    env_file:
-      - .env
+  redis:
+    image: redis:7-alpine
+    container_name: zinx-redis
+    restart: unless-stopped
     ports:
-      - "8999:8999"
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  zinx-server:
+    build: .
+    container_name: zinx-server
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-8999}:8999"
+    environment:
+      # viper overrides: config.yaml keys can be replaced from the environment
+      MYAPP_DATABASE_URL: mongodb://root:${MONGO_PASSWORD:-devpassword}@mongodb:27017
+      MYAPP_DATABASE_NAME: zinx
+      MYAPP_REDIS_URL: redis://redis:6379/1
+      MYAPP_JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
     depends_on:
-      - mongodb
-      - redis
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
 volumes:
   mongodb_data:

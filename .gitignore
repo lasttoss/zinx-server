@@ -18,7 +18,9 @@ coverage.*
 profile.cov
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/
+bin/
+coverage.out
 
 # Go workspace file
 go.work

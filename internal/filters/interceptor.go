@@ -18,31 +18,38 @@ func (i *MyInterceptor) Intercept(chain ziface.IChain) ziface.IcResp {
 	// check authorization login multi device
 	if iRequest.GetMsgID() >= 1100 {
 		conn := iRequest.GetConnection()
-		userId, err := conn.GetProperty("userId")
-		if err != nil {
-			err := conn.SendMsg(constants.RpcError, utils.NewApiError(utils.InvalidContextError))
-			if err != nil {
-				utils.NewSystemError(iRequest.GetMsgID())
-			}
-			conn.Stop()
+		// The connection must be authenticated before it can use the authorized
+		// message range. Without this guard the type assertion below would panic on
+		// a nil property and take the whole server process down.
+		property, propertyErr := conn.GetProperty("userId")
+		if propertyErr != nil {
+			i.reject(conn, iRequest.GetMsgID(), utils.InvalidContextError)
+			return chain.Proceed(chain.Request())
+		}
+		userId, ok := property.(string)
+		if !ok || userId == "" {
+			i.reject(conn, iRequest.GetMsgID(), utils.InvalidContextError)
+			return chain.Proceed(chain.Request())
 		}
 
-		sessionId, ok := i.RedisService.GetSession(userId.(string))
+		sessionId, ok := i.RedisService.GetSession(userId)
 		if !ok {
-			err := conn.SendMsg(constants.RpcError, utils.NewApiError(utils.SystemError))
-			if err != nil {
-				utils.NewSystemError(iRequest.GetMsgID())
-			}
-			conn.Stop()
+			i.reject(conn, iRequest.GetMsgID(), utils.SystemError)
+			return chain.Proceed(chain.Request())
 		}
 
 		if conn.GetConnID() != sessionId {
-			err := conn.SendMsg(constants.RpcError, utils.NewApiError(utils.AnotherDeviceLoginError))
-			if err != nil {
-				utils.NewSystemError(iRequest.GetMsgID())
-			}
-			conn.Stop()
+			i.reject(conn, iRequest.GetMsgID(), utils.AnotherDeviceLoginError)
+			return chain.Proceed(chain.Request())
 		}
 	}
 	return chain.Proceed(chain.Request())
+}
+
+// reject sends an api error and closes the connection.
+func (i *MyInterceptor) reject(conn ziface.IConnection, msgId uint32, code utils.ErrorCode) {
+	if err := conn.SendMsg(constants.RpcError, utils.NewApiError(code)); err != nil {
+		utils.NewSystemError(msgId)
+	}
+	conn.Stop()
 }

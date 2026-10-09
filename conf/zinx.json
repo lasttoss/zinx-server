@@ -1,6 +1,6 @@
 {
   "Name": "Zinx App Server",
-  "Host": "127.0.0.1",
+  "Host": "0.0.0.0",
   "TcpPort": 8999,
   "MaxConn": 12000,
   "MaxPackageSize": 4096,
