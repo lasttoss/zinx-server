@@ -174,14 +174,14 @@ MIT - see [LICENSE](LICENSE). Third-party dependencies keep their own licenses (
 go test -race ./...
 ```
 
-12 tests, and they are where the two real bugs in this repository came from:
+50 tests in 11 files, and they are where the two real bugs in this repository came from:
 
 - `internal/utils` (60%): JWT signing and verification, expiry, a token signed with the wrong key,
   and the error helper that turns failures into the codes the client sees.
-- `internal/services` (10.7%): the chat room driven over real websocket connections - a client
+- `internal/services` (74.8%): the chat room driven over real websocket connections - a client
   joining, leaving, leaving twice, a broadcast reaching every client in the room, a broadcast to an
   empty room, and a client whose socket died being dropped instead of being written to forever.
-- `internal/handlers` (5.6%): the chat router's room map. The router is registered as an empty
+- `internal/handlers` (52.9%): the chat router's room map. The router is registered as an empty
   literal, so the first player to open the chat used to panic the process with *assignment to entry
   in nil map*; and because each connection is handled on its own goroutine, two players joining at
   once were a *concurrent map write*, which Go turns into an unrecoverable crash. Both are fixed
